@@ -1,0 +1,28 @@
+name: Feedback Bot
+
+on:
+  schedule:
+    - cron: "0 9 * * *"  # every day at 9AM UTC
+  workflow_dispatch:
+
+jobs:
+  feedback-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Feedback Bot
+        run: python main.py
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_FEEDBACK_DB: ${{ secrets.NOTION_FEEDBACK_DB }}
+          SLACK_FEEDBACK_WEBHOOK: ${{ secrets.SLACK_FEEDBACK_WEBHOOK }}
