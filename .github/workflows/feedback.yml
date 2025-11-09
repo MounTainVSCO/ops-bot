@@ -3,7 +3,13 @@ name: Feedback Bot
 on:
   schedule:
     - cron: "0 9 * * *"  # every day at 9AM UTC
-  workflow_dispatch:
+  workflow_dispatch:  # allows manual triggering
+    inputs:
+      mode:
+        description: 'Bot mode: "introduce" to send introduction, or leave empty for normal run'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   feedback-bot:
@@ -21,8 +27,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Feedback Bot
-        run: python main.py
+        run: |
+          if [ -n "${{ inputs.mode }}" ]; then
+            python main.py ${{ inputs.mode }}
+          else
+            python main.py
+          fi
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_FEEDBACK_DB: ${{ secrets.NOTION_FEEDBACK_DB }}
           SLACK_FEEDBACK_WEBHOOK: ${{ secrets.SLACK_FEEDBACK_WEBHOOK }}
+          BOT_MODE: ${{ inputs.mode }}
+
