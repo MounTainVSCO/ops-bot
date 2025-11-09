@@ -21,6 +21,10 @@ def main():
             # Join all arguments in case user passes a phrase like "introduce yourself to the people"
             mode = " ".join(sys.argv[1:]).lower()
         
+        print(f"🔍 Debug: Mode detected = '{mode}'", file=sys.stderr)
+        print(f"🔍 Debug: BOT_MODE env = '{os.getenv('BOT_MODE', '')}'", file=sys.stderr)
+        print(f"🔍 Debug: Command line args = {sys.argv[1:]}", file=sys.stderr)
+        
         bot = FeedbackBot(
             notion_db=notion_db,
             slack_webhook=slack_webhook,
@@ -30,8 +34,10 @@ def main():
         # Check if user wants introduction (handles various phrases)
         intro_keywords = ["introduce", "intro", "introduce yourself"]
         if any(keyword in mode for keyword in intro_keywords):
+            print("✅ Running in introduction mode", file=sys.stderr)
             bot.introduce()
         else:
+            print("✅ Running in normal feedback mode", file=sys.stderr)
             bot.run()
             print("✅ Feedback bot completed successfully")
             

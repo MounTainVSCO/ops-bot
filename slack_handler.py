@@ -36,13 +36,18 @@ def verify_slack_request(request):
     slack_signature = request.headers.get('X-Slack-Signature', '')
     return hmac.compare_digest(my_signature, slack_signature)
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint."""
+    return jsonify({'status': 'ok', 'message': 'Slack bot handler is running'})
+
 @app.route('/slack/events', methods=['POST'])
 def slack_events():
     """Handle Slack events."""
     if not verify_slack_request(request):
         return jsonify({'error': 'Invalid request'}), 403
     
-    data = request.json
+    data = request.get_json()
     
     # URL verification challenge
     if data.get('type') == 'url_verification':
