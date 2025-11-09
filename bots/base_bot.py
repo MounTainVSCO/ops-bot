@@ -9,7 +9,7 @@ class NotionSlackBot:
         """Initialize the Notion-Slack bot with validation."""
         # Support multiple environment variable names for flexibility
         self.notion_db = notion_db or os.getenv("NOTION_FEEDBACK_DB") or os.getenv("NOTION_DATABASE_ID")
-        self.slack_webhook = slack_webhook or os.getenv("SLACK_FEEDBACK_WEBHOOK") or os.getenv("SLACK_WEBHOOK_URL")
+        self.slack_webhook = slack_webhook or os.getenv("SLACK_FEEDBACK_WEBHOOK") or os.getenv("SLACK_WEBHOOK_URL") or os.getenv("SLACK_WEBHOOK")
         self.bot_name = bot_name
         self.notion_token = os.getenv("NOTION_TOKEN")
         

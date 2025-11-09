@@ -12,7 +12,7 @@ def main():
     try:
         # Get environment variables - support both naming conventions
         notion_db = os.getenv("NOTION_FEEDBACK_DB") or os.getenv("NOTION_DATABASE_ID")
-        slack_webhook = os.getenv("SLACK_FEEDBACK_WEBHOOK") or os.getenv("SLACK_WEBHOOK_URL")
+        slack_webhook = os.getenv("SLACK_FEEDBACK_WEBHOOK") or os.getenv("SLACK_WEBHOOK_URL") or os.getenv("SLACK_WEBHOOK")
         
         # Check for introduction mode
         # Can be triggered via environment variable or command line argument

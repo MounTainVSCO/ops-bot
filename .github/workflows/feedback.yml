@@ -30,32 +30,34 @@ jobs:
         run: |
           echo "Checking environment variables..."
           echo "NOTION_TOKEN length: ${#NOTION_TOKEN}"
-          echo "NOTION_FEEDBACK_DB length: ${#NOTION_FEEDBACK_DB}"
-          echo "SLACK_FEEDBACK_WEBHOOK length: ${#SLACK_FEEDBACK_WEBHOOK}"
+          echo "NOTION_DATABASE_ID length: ${#NOTION_DATABASE_ID}"
+          echo "SLACK_WEBHOOK_URL length: ${#SLACK_WEBHOOK_URL}"
           if [ -z "$NOTION_TOKEN" ]; then
             echo "❌ NOTION_TOKEN is not set or empty"
             exit 1
           else
             echo "✅ NOTION_TOKEN is set (length: ${#NOTION_TOKEN})"
           fi
-          if [ -z "$NOTION_FEEDBACK_DB" ]; then
-            echo "❌ NOTION_FEEDBACK_DB is not set or empty"
+          if [ -z "$NOTION_DATABASE_ID" ]; then
+            echo "❌ NOTION_DATABASE_ID is not set or empty"
             echo "⚠️  Please check: Settings → Secrets and variables → Actions"
-            echo "⚠️  Secret name must be exactly: NOTION_FEEDBACK_DB"
+            echo "⚠️  Secret name must be exactly: NOTION_DATABASE_ID"
             exit 1
           else
-            echo "✅ NOTION_FEEDBACK_DB is set (length: ${#NOTION_FEEDBACK_DB})"
+            echo "✅ NOTION_DATABASE_ID is set (length: ${#NOTION_DATABASE_ID})"
           fi
-          if [ -z "$SLACK_FEEDBACK_WEBHOOK" ]; then
-            echo "❌ SLACK_FEEDBACK_WEBHOOK is not set or empty"
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "❌ SLACK_WEBHOOK_URL is not set or empty"
+            echo "⚠️  Please check: Settings → Secrets and variables → Actions"
+            echo "⚠️  Secret name must be exactly: SLACK_WEBHOOK"
             exit 1
           else
-            echo "✅ SLACK_FEEDBACK_WEBHOOK is set (length: ${#SLACK_FEEDBACK_WEBHOOK})"
+            echo "✅ SLACK_WEBHOOK_URL is set (length: ${#SLACK_WEBHOOK_URL})"
           fi
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_FEEDBACK_DB: ${{ secrets.NOTION_FEEDBACK_DB }}
-          SLACK_FEEDBACK_WEBHOOK: ${{ secrets.SLACK_FEEDBACK_WEBHOOK }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Run Feedback Bot
         run: |
@@ -66,7 +68,7 @@ jobs:
           fi
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_FEEDBACK_DB: ${{ secrets.NOTION_FEEDBACK_DB }}
-          SLACK_FEEDBACK_WEBHOOK: ${{ secrets.SLACK_FEEDBACK_WEBHOOK }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           BOT_MODE: ${{ inputs.mode }}
 
