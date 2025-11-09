@@ -10,6 +10,8 @@ on:
         required: false
         default: ''
         type: string
+  repository_dispatch:  # allows external webhooks to trigger
+    types: [slack_command]
 
 jobs:
   feedback-bot:
@@ -61,8 +63,14 @@ jobs:
 
       - name: Run Feedback Bot
         run: |
-          if [ -n "${{ inputs.mode }}" ]; then
-            python main.py ${{ inputs.mode }}
+          # Get mode from workflow_dispatch input or repository_dispatch payload
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ] && [ -n "${{ github.event.client_payload.mode }}" ]; then
+            MODE="${{ github.event.client_payload.mode }}"
+          fi
+          
+          if [ -n "$MODE" ]; then
+            python main.py "$MODE"
           else
             python main.py
           fi
@@ -70,5 +78,5 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          BOT_MODE: ${{ inputs.mode }}
+          BOT_MODE: ${{ inputs.mode || github.event.client_payload.mode }}
 
