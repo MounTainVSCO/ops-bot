@@ -2,7 +2,7 @@ name: Feedback Bot
 
 on:
   schedule:
-    - cron: "0 9 * * *"  # every day at 9AM UTC
+    - cron: "0 17 * * *"  # every day at 9AM PST (5PM UTC)
   workflow_dispatch:  # allows manual triggering
     inputs:
       mode:
