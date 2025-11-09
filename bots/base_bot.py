@@ -7,8 +7,9 @@ from typing import Optional, List, Dict, Any
 class NotionSlackBot:
     def __init__(self, notion_db: Optional[str], slack_webhook: Optional[str], bot_name: str):
         """Initialize the Notion-Slack bot with validation."""
-        self.notion_db = notion_db or os.getenv("NOTION_DATABASE_ID")
-        self.slack_webhook = slack_webhook or os.getenv("SLACK_WEBHOOK_URL")
+        # Support multiple environment variable names for flexibility
+        self.notion_db = notion_db or os.getenv("NOTION_FEEDBACK_DB") or os.getenv("NOTION_DATABASE_ID")
+        self.slack_webhook = slack_webhook or os.getenv("SLACK_FEEDBACK_WEBHOOK") or os.getenv("SLACK_WEBHOOK_URL")
         self.bot_name = bot_name
         self.notion_token = os.getenv("NOTION_TOKEN")
         
@@ -16,9 +17,9 @@ class NotionSlackBot:
         if not self.notion_token:
             raise ValueError("NOTION_TOKEN environment variable is required")
         if not self.notion_db:
-            raise ValueError("NOTION_DATABASE_ID or notion_db parameter is required")
+            raise ValueError("NOTION_FEEDBACK_DB, NOTION_DATABASE_ID, or notion_db parameter is required")
         if not self.slack_webhook:
-            raise ValueError("SLACK_WEBHOOK_URL or slack_webhook parameter is required")
+            raise ValueError("SLACK_FEEDBACK_WEBHOOK, SLACK_WEBHOOK_URL, or slack_webhook parameter is required")
         
         self.headers = {
             "Authorization": f"Bearer {self.notion_token}",

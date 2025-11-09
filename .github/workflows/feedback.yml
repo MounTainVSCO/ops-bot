@@ -26,6 +26,32 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Verify environment variables
+        run: |
+          echo "Checking environment variables..."
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "❌ NOTION_TOKEN is not set"
+            exit 1
+          else
+            echo "✅ NOTION_TOKEN is set"
+          fi
+          if [ -z "$NOTION_FEEDBACK_DB" ]; then
+            echo "❌ NOTION_FEEDBACK_DB is not set"
+            exit 1
+          else
+            echo "✅ NOTION_FEEDBACK_DB is set"
+          fi
+          if [ -z "$SLACK_FEEDBACK_WEBHOOK" ]; then
+            echo "❌ SLACK_FEEDBACK_WEBHOOK is not set"
+            exit 1
+          else
+            echo "✅ SLACK_FEEDBACK_WEBHOOK is set"
+          fi
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_FEEDBACK_DB: ${{ secrets.NOTION_FEEDBACK_DB }}
+          SLACK_FEEDBACK_WEBHOOK: ${{ secrets.SLACK_FEEDBACK_WEBHOOK }}
+
       - name: Run Feedback Bot
         run: |
           if [ -n "${{ inputs.mode }}" ]; then
