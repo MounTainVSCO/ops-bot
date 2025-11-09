@@ -29,23 +29,28 @@ jobs:
       - name: Verify environment variables
         run: |
           echo "Checking environment variables..."
+          echo "NOTION_TOKEN length: ${#NOTION_TOKEN}"
+          echo "NOTION_FEEDBACK_DB length: ${#NOTION_FEEDBACK_DB}"
+          echo "SLACK_FEEDBACK_WEBHOOK length: ${#SLACK_FEEDBACK_WEBHOOK}"
           if [ -z "$NOTION_TOKEN" ]; then
-            echo "❌ NOTION_TOKEN is not set"
+            echo "❌ NOTION_TOKEN is not set or empty"
             exit 1
           else
-            echo "✅ NOTION_TOKEN is set"
+            echo "✅ NOTION_TOKEN is set (length: ${#NOTION_TOKEN})"
           fi
           if [ -z "$NOTION_FEEDBACK_DB" ]; then
-            echo "❌ NOTION_FEEDBACK_DB is not set"
+            echo "❌ NOTION_FEEDBACK_DB is not set or empty"
+            echo "⚠️  Please check: Settings → Secrets and variables → Actions"
+            echo "⚠️  Secret name must be exactly: NOTION_FEEDBACK_DB"
             exit 1
           else
-            echo "✅ NOTION_FEEDBACK_DB is set"
+            echo "✅ NOTION_FEEDBACK_DB is set (length: ${#NOTION_FEEDBACK_DB})"
           fi
           if [ -z "$SLACK_FEEDBACK_WEBHOOK" ]; then
-            echo "❌ SLACK_FEEDBACK_WEBHOOK is not set"
+            echo "❌ SLACK_FEEDBACK_WEBHOOK is not set or empty"
             exit 1
           else
-            echo "✅ SLACK_FEEDBACK_WEBHOOK is set"
+            echo "✅ SLACK_FEEDBACK_WEBHOOK is set (length: ${#SLACK_FEEDBACK_WEBHOOK})"
           fi
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
