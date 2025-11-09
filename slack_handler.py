@@ -50,36 +50,41 @@ def slack_events():
     data = request.get_json()
     
     # URL verification challenge
-    if data.get('type') == 'url_verification':
+    if data and data.get('type') == 'url_verification':
         return jsonify({'challenge': data.get('challenge')})
     
     # Handle event callbacks
-    if data.get('type') == 'event_callback':
+    if data and data.get('type') == 'event_callback':
         event = data.get('event', {})
         
-        # Only process app_mentions (when bot is mentioned)
-        if event.get('type') == 'app_mentions':
+        # Slack sends 'app_mention' (singular), not 'app_mentions'
+        if event.get('type') == 'app_mention':
             text = event.get('text', '').lower()
-            channel = event.get('channel')
             
             # Check for introduction command
             if 'introduce' in text or 'intro' in text:
-                bot = FeedbackBot(
-                    notion_db=os.getenv("NOTION_DATABASE_ID"),
-                    slack_webhook=os.getenv("SLACK_WEBHOOK"),
-                    bot_name="Feedback"
-                )
-                bot.introduce()
+                try:
+                    bot = FeedbackBot(
+                        notion_db=os.getenv("NOTION_DATABASE_ID"),
+                        slack_webhook=os.getenv("SLACK_WEBHOOK"),
+                        bot_name="Feedback"
+                    )
+                    bot.introduce()
+                except Exception as e:
+                    print(f"Error in introduce: {e}", flush=True)
                 return jsonify({'status': 'ok'})
             
             # Check for feedback command
             elif 'feedback' in text or 'show' in text or 'list' in text:
-                bot = FeedbackBot(
-                    notion_db=os.getenv("NOTION_DATABASE_ID"),
-                    slack_webhook=os.getenv("SLACK_WEBHOOK"),
-                    bot_name="Feedback"
-                )
-                bot.run()
+                try:
+                    bot = FeedbackBot(
+                        notion_db=os.getenv("NOTION_DATABASE_ID"),
+                        slack_webhook=os.getenv("SLACK_WEBHOOK"),
+                        bot_name="Feedback"
+                    )
+                    bot.run()
+                except Exception as e:
+                    print(f"Error in run: {e}", flush=True)
                 return jsonify({'status': 'ok'})
     
     return jsonify({'status': 'ok'})
